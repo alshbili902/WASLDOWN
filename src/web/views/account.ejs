@@ -1,0 +1,172 @@
+<%- include('partials/header') %>
+
+<div class="mb-8 flex justify-between items-center bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50 shadow-lg">
+  <div>
+    <h1 class="text-3xl font-black text-white mb-2">لوحة التحكم الشخصية 🧑‍💻</h1>
+    <p class="text-slate-400">مرحباً <%= profile.full_name || 'بك' %>، يمكنك إدارة اشتراكك وحسابك من هنا.</p>
+  </div>
+</div>
+
+<% if (error) { %>
+  <div class="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-xl mb-6 flex items-center gap-3 font-bold">
+    <i data-lucide="alert-circle" class="w-6 h-6"></i> <%= error %>
+  </div>
+<% } %>
+
+<% if (success) { %>
+  <div class="bg-emerald-500/10 border border-emerald-500/50 text-emerald-400 p-4 rounded-xl mb-6 flex items-center gap-3 font-bold">
+    <i data-lucide="check-circle" class="w-6 h-6"></i> <%= success %>
+  </div>
+<% } %>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  
+  <!-- بطاقة معلومات الحساب -->
+  <div class="card p-8 border border-slate-700 shadow-xl bg-slate-800 rounded-2xl relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
+    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+      <i data-lucide="user" class="text-blue-400"></i> تفاصيل الحساب
+    </h3>
+    <div class="space-y-4 text-slate-300 font-medium">
+      <p class="flex justify-between border-b border-slate-700/50 pb-2">
+        <span class="text-slate-400">الاسم</span>
+        <span class="text-white"><%= profile.full_name || 'غير محدد' %></span>
+      </p>
+      <p class="flex justify-between border-b border-slate-700/50 pb-2">
+        <span class="text-slate-400">البريد</span>
+        <span class="text-white"><%= profile.email %></span>
+      </p>
+      <p class="flex justify-between pb-2">
+        <span class="text-slate-400">حالة الربط مع تليجرام</span>
+        <% if (profile.telegram_id) { %>
+          <span class="text-emerald-400 font-bold bg-emerald-500/10 px-2 rounded">مربوط ✓</span>
+        <% } else { %>
+          <span class="text-rose-400 font-bold bg-rose-500/10 px-2 rounded">غير مربوط ✗</span>
+        <% } %>
+      </p>
+    </div>
+
+    <% if (!profile.telegram_id) { %>
+      <form action="/account/link-telegram" method="POST" class="mt-6">
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl transition-all flex justify-center items-center gap-2">
+          <i data-lucide="link"></i> ربط حساب تليجرام
+        </button>
+      </form>
+    <% } %>
+  </div>
+
+  <!-- بطاقة الاشتراك -->
+  <div class="card p-8 border border-slate-700 shadow-xl bg-slate-800 rounded-2xl relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl"></div>
+    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+      <i data-lucide="award" class="text-purple-400"></i> حالة الاشتراك
+    </h3>
+    <div class="space-y-4 text-slate-300 font-medium">
+      <p class="flex justify-between border-b border-slate-700/50 pb-2">
+        <span class="text-slate-400">الباقة الحالية</span>
+        <% if (profile.plan_type === 'vip') { %>
+          <span class="text-purple-400 font-bold bg-purple-500/10 px-2 rounded">VIP 💎</span>
+        <% } else if (profile.is_subscribed) { %>
+          <span class="text-blue-400 font-bold bg-blue-500/10 px-2 rounded">Premium ⭐</span>
+        <% } else { %>
+          <span class="text-slate-400 font-bold bg-slate-700 px-2 rounded">مجانية</span>
+        <% } %>
+      </p>
+      
+      <% if (profile.is_subscribed && profile.subscription_end) { %>
+        <p class="flex justify-between border-b border-slate-700/50 pb-2">
+          <span class="text-slate-400">تاريخ الانتهاء</span>
+          <span class="text-white"><%= new Date(profile.subscription_end).toLocaleDateString('ar-SA') %></span>
+        </p>
+      <% } else { %>
+        <p class="flex justify-between border-b border-slate-700/50 pb-2">
+          <span class="text-slate-400">التجربة المتبقية</span>
+          <span class="text-white"><%= Math.max(0, (profile.trial_limit || 10) - (profile.trial_used || 0)) %> / <%= profile.trial_limit || 10 %></span>
+        </p>
+      <% } %>
+      
+      <p class="flex justify-between pb-2">
+        <span class="text-slate-400">التحميلات الناجحة</span>
+        <span class="text-white font-bold"><%= profile.total_downloads || 0 %></span>
+      </p>
+    </div>
+
+    <div class="mt-6">
+      <a href="/pricing" class="w-full block text-center bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 rounded-xl transition-all">
+        ترقية الباقة الآن 🚀
+      </a>
+    </div>
+  </div>
+
+  <!-- بطاقة النقاط والإحالة -->
+  <div class="card p-8 border border-slate-700 shadow-xl bg-slate-800 rounded-2xl relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl"></div>
+    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+      <i data-lucide="coins" class="text-amber-400"></i> النقاط والمكافآت
+    </h3>
+    
+    <div class="text-center mb-6">
+      <div class="text-5xl font-black text-amber-400 mb-2"><%= profile.points || 0 %></div>
+      <p class="text-slate-400 text-sm">إجمالي النقاط المكتسبة</p>
+    </div>
+
+    <div class="space-y-4">
+      <% if (profile.referral_code) { %>
+        <div class="bg-slate-900 border border-slate-700 p-3 rounded-lg text-center">
+          <p class="text-xs text-slate-500 mb-1">كود الدعوة الخاص بك</p>
+          <p class="text-lg font-mono text-white font-bold tracking-wider"><%= profile.referral_code %></p>
+        </div>
+      <% } %>
+      
+      <button onclick="alert('استبدال النقاط سيكون متاحاً قريباً عبر الموقع، يمكنك استخدام البوت لذلك حالياً')" class="w-full border border-amber-500/50 text-amber-400 hover:bg-amber-500 hover:text-white font-bold py-3 px-4 rounded-xl transition-all">
+        استبدال النقاط
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- سجل العمليات -->
+<div class="mt-8 bg-slate-800 rounded-2xl border border-slate-700 p-6 shadow-xl">
+  <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+    <i data-lucide="history" class="text-slate-400"></i> آخر العمليات
+  </h3>
+  
+  <% if (logs && logs.length > 0) { %>
+    <div class="overflow-x-auto">
+      <table class="w-full text-right text-sm">
+        <thead class="bg-slate-900/50 text-slate-400">
+          <tr>
+            <th class="px-4 py-3 rounded-r-lg">العملية</th>
+            <th class="px-4 py-3">المصدر</th>
+            <th class="px-4 py-3">التاريخ</th>
+            <th class="px-4 py-3 rounded-l-lg">الحالة</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-700/50">
+          <% logs.forEach(log => { %>
+            <tr class="hover:bg-slate-700/20">
+              <td class="px-4 py-3 text-white font-medium"><%= log.action_type %></td>
+              <td class="px-4 py-3 text-slate-400"><%= log.source === 'web' ? 'الموقع 🌐' : 'تليجرام 📱' %></td>
+              <td class="px-4 py-3 text-slate-400"><%= new Date(log.created_at).toLocaleString('ar-SA') %></td>
+              <td class="px-4 py-3">
+                <% if (log.status === 'success') { %>
+                  <span class="text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md text-xs font-bold">نجاح</span>
+                <% } else { %>
+                  <span class="text-rose-400 bg-rose-500/10 px-2 py-1 rounded-md text-xs font-bold">فشل</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="text-center py-8 text-slate-500">
+      <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>
+      <p>لا توجد عمليات مسجلة حتى الآن.</p>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

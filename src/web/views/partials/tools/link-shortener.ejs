@@ -1,0 +1,65 @@
+<div class="space-y-6">
+    <form id="form-shorten" class="space-y-6">
+        <div class="space-y-2">
+            <label class="text-sm font-bold text-slate-400">الرابط الطويل</label>
+            <div class="relative">
+                <input type="url" id="shorten-url" required placeholder="https://example.com/very-long-link..." 
+                       class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-white focus:border-emerald-500 outline-none transition-all pr-12">
+                <i data-lucide="link" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+            </div>
+        </div>
+
+        <button type="submit" id="shorten-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-2xl font-black text-xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-emerald-500/20">
+            <i data-lucide="scissors" class="w-6 h-6"></i> اختصار الرابط الآن
+        </button>
+    </form>
+
+    <div id="shorten-res-container" class="hidden animate-in zoom-in duration-300">
+        <div class="bg-slate-900 p-6 rounded-2xl border border-emerald-500/20 text-center space-y-4">
+            <p class="text-slate-400 text-sm">تم الاختصار بنجاح! 🎉</p>
+            <div class="flex items-center gap-2 bg-slate-800 p-4 rounded-xl border border-slate-700">
+                <code id="shorten-res" class="flex-grow text-emerald-400 font-mono text-lg break-all"></code>
+                <button onclick="copyToClipboard()" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 p-2 rounded-lg transition-all" title="نسخ">
+                    <i data-lucide="copy" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  document.getElementById('form-shorten').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('shorten-btn');
+    const resContainer = document.getElementById('shorten-res-container');
+    const resEl = document.getElementById('shorten-res');
+    
+    btn.innerHTML = '<div class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div> جاري الاختصار...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/shorten-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: document.getElementById('shorten-url').value })
+      });
+      const data = await res.json();
+      if(data.error) throw new Error(data.error);
+      
+      resEl.innerText = data.result;
+      resContainer.classList.remove('hidden');
+    } catch(err) {
+      alert(err.message);
+    } finally {
+      btn.innerHTML = '<i data-lucide="scissors" class="w-6 h-6"></i> اختصار الرابط الآن';
+      lucide.createIcons();
+      btn.disabled = false;
+    }
+  });
+
+  function copyToClipboard() {
+    const text = document.getElementById('shorten-res').innerText;
+    navigator.clipboard.writeText(text);
+    alert('تم نسخ الرابط! ✅');
+  }
+</script>

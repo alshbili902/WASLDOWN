@@ -1,0 +1,77 @@
+<div class="space-y-6">
+    <div class="bg-purple-500/10 border border-purple-500/20 p-6 rounded-3xl flex items-center gap-4 mb-8">
+        <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-400 shrink-0 shadow-lg shadow-purple-500/10">
+            <i data-lucide="brain-circuit" class="w-8 h-8"></i>
+        </div>
+        <div>
+            <h4 class="text-white font-bold text-lg">قوة الذكاء الاصطناعي بين يديك</h4>
+            <p class="text-slate-400 text-sm leading-relaxed">سنقوم بتحويل الفيديو الطويل إلى ملخص نصي دقيق يحتوي على أهم النقاط والأفكار الرئيسية في ثوانٍ.</p>
+        </div>
+    </div>
+
+    <form id="form-summary" class="space-y-6">
+        <div class="space-y-2">
+            <label class="text-sm font-bold text-slate-400">رابط الفيديو (يدعم يوتيوب حالياً)</label>
+            <input type="url" id="summary-url" required placeholder="https://www.youtube.com/watch?v=..." 
+                   class="w-full bg-slate-900 border-2 border-slate-700 rounded-2xl px-6 py-4 text-white focus:border-purple-500 outline-none transition-all text-lg">
+        </div>
+        <button type="submit" id="summary-btn" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-2xl font-black text-xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-purple-500/20">
+            <i data-lucide="zap" class="w-6 h-6"></i> تحليل وتلخيص الآن
+        </button>
+    </form>
+
+    <div id="summary-res-container" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div class="bg-slate-900 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
+            <div class="bg-slate-800 p-4 border-b border-slate-700 flex justify-between items-center">
+                <span class="text-white font-bold text-sm flex items-center gap-2">
+                    <i data-lucide="list-checks" class="w-4 h-4 text-purple-400"></i>
+                    نتيجة التحليل
+                </span>
+                <button onclick="copySummary()" class="text-purple-400 hover:text-purple-300 text-xs font-bold flex items-center gap-1 transition-all">
+                    <i data-lucide="copy" class="w-4 h-4"></i> نسخ النص
+                </button>
+            </div>
+            <div id="summary-res" class="p-6 text-slate-300 text-sm leading-relaxed whitespace-pre-line max-h-[400px] overflow-y-auto custom-scrollbar">
+                <!-- النتيجة تظهر هنا -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  document.getElementById('form-summary').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('summary-btn');
+    const resContainer = document.getElementById('summary-res-container');
+    const resEl = document.getElementById('summary-res');
+    
+    btn.innerHTML = '<div class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div> جاري معالجة الفيديو بالذكاء الاصطناعي...';
+    btn.disabled = true;
+    resContainer.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/media/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: document.getElementById('summary-url').value })
+      });
+      const data = await res.json();
+      if(data.error) throw new Error(data.error);
+      
+      resEl.innerText = data.result;
+      resContainer.classList.remove('hidden');
+    } catch(err) {
+      alert(err.message);
+    } finally {
+      btn.innerHTML = '<i data-lucide="zap" class="w-6 h-6"></i> تحليل وتلخيص الآن';
+      lucide.createIcons();
+      btn.disabled = false;
+    }
+  });
+
+  function copySummary() {
+    const text = document.getElementById('summary-res').innerText;
+    navigator.clipboard.writeText(text);
+    alert('تم نسخ الملخص! ✅');
+  }
+</script>

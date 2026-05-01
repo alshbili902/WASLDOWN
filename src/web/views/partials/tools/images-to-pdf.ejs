@@ -1,0 +1,24 @@
+<div class="space-y-6">
+    <form action="/api/merge-pdf" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div class="space-y-2">
+            <label class="text-sm font-bold text-slate-400">اختر الصور (يمكنك اختيار عدة صور معاً)</label>
+            <div class="relative min-h-[200px] border-2 border-dashed border-slate-700 rounded-3xl flex flex-col items-center justify-center bg-slate-900/30 hover:bg-slate-900/50 transition-all group">
+                <input type="file" name="images" accept="image/*" multiple required class="absolute inset-0 opacity-0 cursor-pointer">
+                <i data-lucide="layers" class="w-12 h-12 text-slate-500 mb-3 group-hover:text-orange-400 transition-colors"></i>
+                <p class="text-slate-300 font-bold">اسحب الصور هنا أو اضغط للاختيار</p>
+                <p class="text-slate-500 text-xs mt-2">يمكنك اختيار حتى 20 صورة في المرة الواحدة</p>
+            </div>
+        </div>
+
+        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-2xl flex items-start gap-3">
+            <i data-lucide="info" class="w-5 h-5 text-orange-400 shrink-0"></i>
+            <p class="text-xs text-orange-200/60 leading-relaxed">
+                سيتم ترتيب الصور في ملف الـ PDF النهائي بناءً على ترتيب اختيارها من جهازك. تأكد من جودة الصور لضمان أفضل نتيجة.
+            </p>
+        </div>
+
+        <button type="submit" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-2xl font-black text-xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-orange-500/20">
+            <i data-lucide="file-text" class="w-6 h-6"></i> دمج الصور وإنشاء PDF
+        </button>
+    </form>
+</div>

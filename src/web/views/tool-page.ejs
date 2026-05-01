@@ -1,0 +1,103 @@
+<%- include('partials/header') %>
+
+<div class="page-transition" id="tool-container">
+    <!-- Breadcrumbs & Navigation -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+        <nav class="flex items-center gap-3 text-slate-500 text-sm font-bold bg-slate-800/40 p-4 px-6 rounded-2xl border border-slate-700/30 backdrop-blur-md">
+            <a href="/" class="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                الرئيسية
+            </a>
+            <i data-lucide="chevron-left" class="w-4 h-4 opacity-20"></i>
+            <a href="/tools" class="hover:text-blue-400 transition-colors">الأدوات</a>
+            <i data-lucide="chevron-left" class="w-4 h-4 opacity-20"></i>
+            <span class="text-blue-400"><%= tool.name %></span>
+        </nav>
+
+        <a href="/tools" class="card p-1 group">
+            <div class="bg-slate-800 rounded-xl px-5 py-2.5 flex items-center gap-3 text-slate-300 font-black text-sm relative z-10 transition-colors group-hover:bg-slate-700">
+                <i data-lucide="arrow-right" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                العودة للأدوات
+            </div>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Tool Area -->
+        <div class="lg:col-span-2 space-y-8">
+            <div class="card p-1 section-download">
+                <div class="bg-slate-900/95 rounded-[22px] p-8 md:p-10 relative z-10">
+                    <div class="flex items-center gap-5 mb-8">
+                        <div class="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/20 shadow-inner">
+                            <i data-lucide="<%= tool.icon %>" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl md:text-4xl font-black text-white mb-2"><%= tool.name %></h1>
+                            <p class="text-slate-400 font-medium"><%= tool.desc %></p>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <%- include('partials/tools/' + tool.id, { tool, profile }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar / Info Area -->
+        <div class="space-y-6">
+            <div class="card p-1">
+                <div class="bg-slate-900/90 rounded-[22px] p-8 relative z-10">
+                    <h4 class="text-white font-black mb-6 flex items-center gap-3 text-lg">
+                        <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                            <i data-lucide="help-circle" class="w-5 h-5"></i>
+                        </div>
+                        كيفية الاستخدام
+                    </h4>
+                    <ul class="space-y-5">
+                        <li class="flex gap-4 items-start">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-blue-400 text-xs font-black border border-slate-700 shrink-0">١</span>
+                            <p class="text-slate-400 text-sm leading-relaxed">ضع الرابط المطلوب في الخانة المخصصة بالأعلى.</p>
+                        </li>
+                        <li class="flex gap-4 items-start">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-blue-400 text-xs font-black border border-slate-700 shrink-0">٢</span>
+                            <p class="text-slate-400 text-sm leading-relaxed">اضغط على زر التحقق أو التنفيذ لبدء المعالجة.</p>
+                        </li>
+                        <li class="flex gap-4 items-start">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-blue-400 text-xs font-black border border-slate-700 shrink-0">٣</span>
+                            <p class="text-slate-400 text-sm leading-relaxed">انتظر ثوانٍ حتى تنتهي المعالجة الذكية للمحتوى.</p>
+                        </li>
+                        <li class="flex gap-4 items-start">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-blue-400 text-xs font-black border border-slate-700 shrink-0">٤</span>
+                            <p class="text-slate-400 text-sm leading-relaxed">حمل ملفك مباشرة أو انسخ النتيجة بضغطة زر.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card p-1">
+                <div class="bg-slate-900/90 rounded-[22px] p-8 relative z-10">
+                    <h4 class="text-white font-black mb-4 flex items-center gap-3 text-lg">
+                        <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-400">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </div>
+                        أمان البيانات
+                    </h4>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium">
+                        جميع الملفات والروابط يتم معالجتها بشكل مشفر تماماً. يتم حذف البيانات المؤقتة تلقائياً بمجرد انتهاء التحميل لضمان أقصى درجات الخصوصية لمستخدمينا.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toolContainer = document.getElementById('tool-container');
+        setTimeout(() => toolContainer.classList.add('page-loaded'), 50);
+        lucide.createIcons();
+    });
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,41 @@
+{
+  "name": "wasl-downloader-bot",
+  "version": "1.0.0",
+  "description": "بوت تليجرام عربي لتحميل المقاطع العامة عبر yt-dlp مع اشتراكات Supabase.",
+  "main": "src/bot.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node start-all.js",
+    "start:all": "node start-all.js",
+    "web": "node src/web/server.js",
+    "bot": "node src/bot.js",
+    "dev": "node --watch start-all.js",
+    "build": "echo 'No build step required for this project'"
+  },
+  "keywords": [
+    "telegram",
+    "telegraf",
+    "yt-dlp",
+    "supabase",
+    "downloader"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.7",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.4.1",
+    "express-session": "^1.19.0",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.7",
+    "pdf-lib": "^1.17.1",
+    "sharp": "^0.34.5",
+    "telegraf": "^4.16.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

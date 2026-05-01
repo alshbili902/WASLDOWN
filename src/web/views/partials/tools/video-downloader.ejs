@@ -1,0 +1,124 @@
+<div class="space-y-8">
+    <div class="relative group">
+        <div class="absolute inset-0 bg-blue-500/10 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+        <input type="url" id="media-url" placeholder="ضع رابط الفيديو هنا (انستقرام، يوتيوب، تيك توك...)" 
+               class="relative w-full bg-slate-950/50 border-2 border-slate-800 rounded-2xl px-6 py-5 text-white focus:border-blue-500/50 focus:bg-slate-900/80 outline-none transition-all text-lg font-medium placeholder:text-slate-600 shadow-2xl">
+        <button id="inspect-btn" class="absolute left-2.5 top-2.5 bottom-2.5 bg-gradient-to-l from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-8 rounded-xl font-black transition-all flex items-center gap-2 shadow-lg shadow-blue-600/20 active:scale-95 group-hover:px-10">
+            <i data-lucide="search" class="w-5 h-5"></i>
+            تحقق
+        </button>
+    </div>
+
+    <div id="inspect-loader" class="hidden text-center py-10 animate-pulse">
+        <div class="inline-block animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full mb-4"></div>
+        <p class="text-blue-400 font-black text-lg">جاري فحص الرابط بذكاء...</p>
+    </div>
+
+    <div id="media-preview" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div class="bg-slate-900/80 rounded-2xl p-6 border border-slate-700/50">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="w-full md:w-48 h-28 bg-slate-800 rounded-xl overflow-hidden relative shadow-lg">
+                    <img id="preview-thumb" src="" alt="" class="w-full h-full object-cover">
+                    <span id="preview-duration" class="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded">00:00</span>
+                </div>
+                <div class="flex-grow">
+                    <h4 id="preview-title" class="text-lg font-bold text-white mb-2 line-clamp-2">عنوان المقطع</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <span id="preview-platform" class="bg-slate-800 text-slate-300 px-3 py-1 rounded-full text-xs border border-slate-700">المنصة</span>
+                        <span class="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs border border-emerald-500/20">جاهز للتحميل ✅</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-6 border-slate-700/50">
+
+            <div class="space-y-4">
+                <label class="text-sm font-bold text-slate-400 flex items-center gap-2">
+                    <i data-lucide="video" class="w-4 h-4"></i> اختر الجودة المطلوبة
+                </label>
+                <select id="video-quality" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500">
+                    <option value="best">أعلى جودة متاحة (HD)</option>
+                    <option value="medium">جودة متوسطة (480p)</option>
+                    <option value="worst">حجم خفيف (360p)</option>
+                </select>
+                <div id="iphone-tip" class="hidden bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl text-blue-400 text-xs text-right mb-4">
+                    💡 لمستخدمي iPhone: إذا ظهر الفيديو كمعاينة، اضغط على زر "المشاركة" ثم اختر "حفظ في الملفات".
+                </div>
+                <button id="download-btn" onclick="handleMediaDownload('video')" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-black text-lg flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-500/20">
+                    <i data-lucide="download" class="w-6 h-6"></i> بدء تحميل الفيديو
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="media-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-center font-bold">
+        الرابط غير صالح أو غير مدعوم حالياً ❌
+    </div>
+</div>
+
+<script>
+  let currentMetadata = null;
+
+  document.getElementById('inspect-btn').addEventListener('click', async () => {
+    // التحقق من نوع الجهاز لإظهار نصيحة آيفون
+    const isIphone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIphone) {
+        document.getElementById('iphone-tip').classList.remove('hidden');
+    }
+
+    const url = document.getElementById('media-url').value;
+    if (!url) return alert('الرجاء وضع رابط أولاً');
+    
+    const loader = document.getElementById('inspect-loader');
+    const preview = document.getElementById('media-preview');
+    const errorEl = document.getElementById('media-error');
+    const btn = document.getElementById('inspect-btn');
+
+    loader.classList.remove('hidden');
+    preview.classList.add('hidden');
+    errorEl.classList.add('hidden');
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/media/inspect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      currentMetadata = data;
+      document.getElementById('preview-title').innerText = data.title;
+      document.getElementById('preview-thumb').src = data.thumbnail || '';
+      document.getElementById('preview-duration').innerText = data.durationText;
+      document.getElementById('preview-platform').innerText = data.platform;
+      preview.classList.remove('hidden');
+    } catch (err) {
+      errorEl.classList.remove('hidden');
+      errorEl.innerText = err.message;
+    } finally {
+      loader.classList.add('hidden');
+      btn.disabled = false;
+    }
+  });
+
+  function handleMediaDownload(type) {
+    if (!currentMetadata) return;
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/api/media/download-video';
+    
+    const urlInput = document.createElement('input');
+    urlInput.type = 'hidden'; urlInput.name = 'url'; urlInput.value = currentMetadata.originalUrl;
+    form.appendChild(urlInput);
+
+    const qInput = document.createElement('input');
+    qInput.type = 'hidden'; qInput.name = 'quality'; qInput.value = document.getElementById('video-quality').value;
+    form.appendChild(qInput);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+  }
+</script>

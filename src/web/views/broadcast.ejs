@@ -1,0 +1,101 @@
+<%- include('partials/header') %>
+
+<div class="page-transition" id="broadcast-page">
+    <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 card p-8 md:p-10 section-vip">
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-4">إرسال جماعي 📢</h1>
+            <p class="text-slate-400 text-lg font-medium">أرسل رسالة فورية إلى جميع مستخدمي البوت المشتركين والمسجلين.</p>
+        </div>
+    </div>
+
+    <% if (success) { %>
+        <div class="card p-1 mb-8 border-emerald-500/30">
+            <div class="bg-emerald-500/10 text-emerald-400 p-6 rounded-[22px] flex items-center gap-4 relative z-10">
+                <i data-lucide="check-circle" class="w-6 h-6"></i>
+                <span class="font-bold text-sm">تم إرسال الرسائل بنجاح! راقب التيرمينال للتفاصيل.</span>
+            </div>
+        </div>
+    <% } %>
+
+    <% if (error) { %>
+        <div class="card p-1 mb-8 border-red-500/30">
+            <div class="bg-red-500/10 text-red-400 p-6 rounded-[22px] flex items-center gap-4 relative z-10">
+                <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                <span class="font-bold text-sm"><%= error %></span>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- نموذج الإرسال -->
+        <div class="lg:col-span-2">
+            <div class="card p-1 section-download">
+                <div class="bg-slate-900/95 rounded-[22px] p-8 relative z-10">
+                    <h3 class="text-2xl font-black text-white mb-8 flex items-center gap-3">
+                        <i data-lucide="message-square" class="w-6 h-6 text-blue-500"></i>
+                        نص الرسالة
+                    </h3>
+                    
+                    <form action="/admin/broadcast/send" method="POST" class="space-y-6">
+                        <div>
+                            <label class="block text-[10px] text-slate-500 font-black uppercase mb-3 mr-2">محتوى الرسالة (يدعم HTML)</label>
+                            <textarea name="message" rows="10" required 
+                                      class="w-full bg-slate-950 border-2 border-slate-800 text-white p-6 rounded-[22px] focus:border-blue-500/50 outline-none transition-all font-medium text-lg placeholder:text-slate-800"
+                                      placeholder="اكتب رسالتك هنا..."></textarea>
+                        </div>
+
+                        <div class="bg-slate-800/30 p-6 rounded-2xl border border-slate-700/30 mb-8">
+                            <h4 class="text-xs font-black text-slate-500 uppercase mb-4 flex items-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4"></i>
+                                ملاحظات برمجية:
+                            </h4>
+                            <ul class="text-[11px] text-slate-400 space-y-2">
+                                <li>• يمكنك استخدام وسوم HTML الأساسية مثل <b>&lt;b&gt;</b> و <i>&lt;i&gt;</i>.</li>
+                                <li>• سيتم إرسال الرسالة إلى كل المستخدمين المربوطين بتليجرام.</li>
+                                <li>• الإرسال يتم بتأخير بسيط (50ms) لتجنب حظر السيرفر من تليجرام.</li>
+                            </ul>
+                        </div>
+
+                        <button type="submit" class="use-btn w-full !py-5 shadow-blue-500/20 text-xl flex items-center justify-center gap-3">
+                            <i data-lucide="send" class="w-6 h-6"></i>
+                            بدء الإرسال الجماعي الآن
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- نصائح الإرسال -->
+        <div class="lg:col-span-1">
+            <div class="card p-1 section-pricing">
+                <div class="bg-slate-900/95 rounded-[22px] p-8 relative z-10">
+                    <h3 class="text-xl font-black text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
+                        نصائح للمدير
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                            <p class="text-xs text-slate-400 leading-relaxed font-medium">استخدم الإرسال الجماعي للإعلان عن <b>تحديثات جديدة</b> أو <b>عروض اشتراك</b> حصرية.</p>
+                        </div>
+                        <div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                            <p class="text-xs text-slate-400 leading-relaxed font-medium">تجنب الإرسال المتكرر جداً (Spam) حتى لا يقوم المستخدمون بحظر البوت.</p>
+                        </div>
+                        <div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                            <p class="text-xs text-slate-400 leading-relaxed font-medium">تأكد من مراجعة الرسالة جيداً قبل الضغط على زر الإرسال، حيث لا يمكن التراجع بعد البدء.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const broadcastPage = document.getElementById('broadcast-page');
+        setTimeout(() => broadcastPage.classList.add('page-loaded'), 50);
+        lucide.createIcons();
+    });
+</script>
+
+<%- include('partials/footer') %>

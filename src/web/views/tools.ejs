@@ -1,0 +1,75 @@
+<%- include('partials/header') %>
+
+<div class="page-transition" id="tools-page">
+    <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 card p-8 md:p-10 section-download">
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-4">أدوات الذكاء والتحميل 🚀</h1>
+            <p class="text-slate-400 text-lg">تصفح مجموعتنا الواسعة من الأدوات الاحترافية لمساعدتك في أعمالك.</p>
+        </div>
+        <div class="relative z-10 flex gap-2">
+            <div class="bg-blue-500/10 text-blue-400 px-6 py-3 rounded-2xl border border-blue-500/20 text-lg font-bold">
+                <%= tools.length %> أداة متاحة
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs / Filter -->
+    <div class="flex gap-3 mb-10 overflow-x-auto pb-4 scrollbar-hide" id="filter-container">
+        <button data-filter="all" class="filter-btn active bg-slate-800 text-slate-400 hover:text-white px-8 py-3 rounded-2xl text-sm font-bold transition-all border border-slate-700 whitespace-nowrap">الكل</button>
+        <button data-filter="تحميل" class="filter-btn bg-slate-800 text-slate-400 hover:text-white px-8 py-3 rounded-2xl text-sm font-bold transition-all border border-slate-700 whitespace-nowrap">التحميل</button>
+        <button data-filter="ذكاء اصطناعي" class="filter-btn bg-slate-800 text-slate-400 hover:text-white px-8 py-3 rounded-2xl text-sm font-bold transition-all border border-slate-700 whitespace-nowrap">ذكاء اصطناعي</button>
+        <button data-filter="صور" class="filter-btn bg-slate-800 text-slate-400 hover:text-white px-8 py-3 rounded-2xl text-sm font-bold transition-all border border-slate-700 whitespace-nowrap">صور</button>
+        <button data-filter="فيديو" class="filter-btn bg-slate-800 text-slate-400 hover:text-white px-8 py-3 rounded-2xl text-sm font-bold transition-all border border-slate-700 whitespace-nowrap">فيديو</button>
+        <button data-filter="أدوات" class="filter-btn bg-slate-800 text-slate-400 hover:text-white px-8 py-3 rounded-2xl text-sm font-bold transition-all border border-slate-700 whitespace-nowrap">أدوات أخرى</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8" id="tool-grid">
+        <% tools.forEach(tool => { %>
+            <div class="tool-item w-full" data-category="<%= tool.category %>">
+                <%- include('partials/tool-card', { tool }) %>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toolsPage = document.getElementById('tools-page');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const toolItems = document.querySelectorAll('.tool-item');
+
+        // Page Entry Animation
+        setTimeout(() => toolsPage.classList.add('page-loaded'), 50);
+
+        // Filtering Logic
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+                
+                // Update buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter Items
+                toolItems.forEach(item => {
+                    const category = item.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        item.style.display = 'block';
+                        item.style.animation = 'fadeIn 0.5s ease forwards';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<%- include('partials/footer') %>

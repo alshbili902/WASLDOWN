@@ -1,0 +1,155 @@
+<%- include('partials/header') %>
+
+<div class="page-transition" id="dashboard-page">
+    <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 card p-8 md:p-10 section-download">
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-4">لوحة القيادة 📊</h1>
+            <p class="text-slate-400 text-lg font-medium">نظرة عامة شاملة على أداء نظام وصل داونلودر ونشاط المستخدمين.</p>
+        </div>
+        <div class="relative z-10 flex gap-2">
+            <div class="bg-blue-500/10 text-blue-400 px-6 py-3 rounded-2xl border border-blue-500/20 text-lg font-bold">
+                تحكم كامل
+            </div>
+        </div>
+    </div>
+
+    <!-- البطاقات الإحصائية -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-12">
+        <!-- إجمالي المستخدمين -->
+        <div class="card p-1">
+            <div class="bg-slate-900/90 rounded-[22px] p-6 h-full relative z-10">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 border border-slate-700">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-slate-400 font-bold text-sm">إجمالي المستخدمين</span>
+                </div>
+                <div class="text-3xl font-black text-white"><%= stats.totalUsers %></div>
+            </div>
+        </div>
+
+        <!-- المشتركين الفعالين -->
+        <div class="card p-1 section-vip">
+            <div class="bg-slate-900/90 rounded-[22px] p-6 h-full relative z-10">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-500 border border-amber-500/20">
+                        <i data-lucide="crown" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-amber-500/80 font-bold text-sm">المشتركين الفعالين</span>
+                </div>
+                <div class="text-3xl font-black text-amber-500"><%= stats.subscribed %></div>
+            </div>
+        </div>
+
+        <!-- غير المشتركين -->
+        <div class="card p-1">
+            <div class="bg-slate-900/90 rounded-[22px] p-6 h-full relative z-10">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500 border border-slate-700">
+                        <i data-lucide="user-minus" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-slate-500 font-bold text-sm">غير المشتركين</span>
+                </div>
+                <div class="text-3xl font-black text-slate-300"><%= stats.notSubscribed %></div>
+            </div>
+        </div>
+
+        <!-- انتهت تجربتهم -->
+        <div class="card p-1 section-features">
+            <div class="bg-slate-900/90 rounded-[22px] p-6 h-full relative z-10">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-pink-500/10 rounded-xl flex items-center justify-center text-pink-500 border border-pink-500/20">
+                        <i data-lucide="clock" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-pink-500/80 font-bold text-sm">انتهت تجربتهم</span>
+                </div>
+                <div class="text-3xl font-black text-pink-500"><%= stats.trialEnded %></div>
+            </div>
+        </div>
+
+        <!-- إجمالي التحميلات -->
+        <div class="card p-1 section-pricing">
+            <div class="bg-slate-900/90 rounded-[22px] p-6 h-full relative z-10">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500 border border-emerald-500/20">
+                        <i data-lucide="download-cloud" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-emerald-500/80 font-bold text-sm">إجمالي التحميلات</span>
+                </div>
+                <div class="text-3xl font-black text-emerald-500"><%= stats.totalDownloads %></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- آخر المستخدمين -->
+    <div class="card p-1">
+        <div class="bg-slate-900/95 rounded-[22px] overflow-hidden relative z-10">
+            <div class="p-8 border-b border-slate-800/50 flex justify-between items-center">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <i data-lucide="list" class="w-6 h-6 text-blue-500"></i>
+                    أحدث المسجلين
+                </h2>
+                <a href="/admin/users" class="use-btn !m-0 !py-2 !px-5 text-xs">عرض الكل &larr;</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right">
+                    <thead class="bg-slate-950/30 text-slate-500 text-xs uppercase tracking-widest">
+                        <tr>
+                            <th class="p-5 font-black">المستخدم</th>
+                            <th class="p-5 font-black">حالة الاشتراك</th>
+                            <th class="p-5 font-black text-center">التحميلات</th>
+                            <th class="p-5 font-black">تاريخ الانضمام</th>
+                            <th class="p-5 font-black text-center">إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/50">
+                        <% recentUsers.forEach(user => { 
+                            const isSubActive = user.is_subscribed && new Date(user.subscription_end) > new Date();
+                        %>
+                            <tr class="hover:bg-slate-800/30 transition-all group">
+                                <td class="p-5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-blue-400 font-bold border border-slate-700 group-hover:border-blue-500/30 transition-all">
+                                            <%= (user.full_name || user.email || '?')[0].toUpperCase() %>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-white text-sm"><%= user.full_name || 'بدون اسم' %></div>
+                                            <div class="text-[11px] text-slate-500"><%= user.email %></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-5">
+                                    <% if(isSubActive) { %>
+                                        <span class="bg-amber-500/10 text-amber-500 px-3 py-1 rounded-lg text-[10px] font-black border border-amber-500/20 uppercase tracking-tighter">VIP ⭐</span>
+                                    <% } else { %>
+                                        <span class="bg-slate-800 text-slate-400 px-3 py-1 rounded-lg text-[10px] font-black border border-slate-700 uppercase tracking-tighter">FREE</span>
+                                    <% } %>
+                                </td>
+                                <td class="p-5 text-center">
+                                    <span class="text-sm font-black text-slate-300 bg-slate-800/50 px-3 py-1 rounded-md border border-slate-700/50"><%= user.total_downloads || 0 %></span>
+                                </td>
+                                <td class="p-5 text-slate-500 text-xs font-medium" dir="ltr"><%= new Date(user.created_at).toLocaleDateString('en-GB') %></td>
+                                <td class="p-5 text-center">
+                                    <a href="/admin/users/<%= user.id %>" class="text-blue-400 hover:text-white transition-colors text-xs font-black bg-blue-500/5 hover:bg-blue-600 px-4 py-2 rounded-lg border border-blue-500/10">إدارة</a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        <% if(recentUsers.length === 0) { %>
+                            <tr><td colspan="5" class="p-12 text-center text-slate-500 font-bold">لا يوجد مستخدمين بعد.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dashboardPage = document.getElementById('dashboard-page');
+        setTimeout(() => dashboardPage.classList.add('page-loaded'), 50);
+        lucide.createIcons();
+    });
+</script>
+
+<%- include('partials/footer') %>

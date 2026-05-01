@@ -1,0 +1,110 @@
+<div class="space-y-6">
+    <div class="relative group">
+        <input type="url" id="media-url" placeholder="ضع رابط الفيديو لاستخراج الصوت..." 
+               class="w-full bg-slate-900/50 border-2 border-slate-700 rounded-2xl px-6 py-4 text-white focus:border-indigo-500 outline-none transition-all text-lg">
+        <button id="inspect-btn" class="absolute left-2 top-2 bottom-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 rounded-xl font-bold transition-all flex items-center gap-2">
+            <i data-lucide="music" class="w-4 h-4"></i>
+            فحص
+        </button>
+    </div>
+
+    <div id="inspect-loader" class="hidden text-center py-8">
+        <div class="inline-block animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full mb-4"></div>
+        <p class="text-indigo-400 font-medium">جاري تحليل الرابط...</p>
+    </div>
+
+    <div id="media-preview" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div class="bg-slate-900/80 rounded-2xl p-6 border border-slate-700/50">
+            <div class="flex flex-col md:flex-row gap-6 items-center">
+                <div class="w-24 h-24 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                    <i data-lucide="music-2" class="w-10 h-10"></i>
+                </div>
+                <div class="flex-grow text-center md:text-right">
+                    <h4 id="preview-title" class="text-lg font-bold text-white mb-2 line-clamp-2">عنوان الملف الصوتي</h4>
+                    <span id="preview-platform" class="text-xs text-slate-500">يوتيوب</span>
+                </div>
+            </div>
+
+            <hr class="my-6 border-slate-700/50">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-400">اختر الصيغة</label>
+                    <select id="audio-format" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500">
+                        <option value="mp3">صيغة MP3</option>
+                        <option value="m4a">صيغة M4A (أفضل جودة)</option>
+                        <option value="wav">صيغة WAV (بدون ضغط)</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="handleAudioDownload()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3.5 rounded-xl font-black flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-500/20">
+                        <i data-lucide="download" class="w-5 h-5"></i> استخراج الصوت
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="media-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-center font-bold">
+        الرابط غير صالح أو غير مدعوم حالياً ❌
+    </div>
+</div>
+
+<script>
+  let currentMetadata = null;
+
+  document.getElementById('inspect-btn').addEventListener('click', async () => {
+    const url = document.getElementById('media-url').value;
+    if (!url) return alert('الرجاء وضع رابط أولاً');
+    
+    const loader = document.getElementById('inspect-loader');
+    const preview = document.getElementById('media-preview');
+    const errorEl = document.getElementById('media-error');
+    const btn = document.getElementById('inspect-btn');
+
+    loader.classList.remove('hidden');
+    preview.classList.add('hidden');
+    errorEl.classList.add('hidden');
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/media/inspect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      currentMetadata = data;
+      document.getElementById('preview-title').innerText = data.title;
+      document.getElementById('preview-platform').innerText = data.platform;
+      preview.classList.remove('hidden');
+    } catch (err) {
+      errorEl.classList.remove('hidden');
+      errorEl.innerText = err.message;
+    } finally {
+      loader.classList.add('hidden');
+      btn.disabled = false;
+    }
+  });
+
+  function handleAudioDownload() {
+    if (!currentMetadata) return;
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/api/media/download-audio';
+    
+    const urlInput = document.createElement('input');
+    urlInput.type = 'hidden'; urlInput.name = 'url'; urlInput.value = currentMetadata.originalUrl;
+    form.appendChild(urlInput);
+
+    const fInput = document.createElement('input');
+    fInput.type = 'hidden'; fInput.name = 'format'; fInput.value = document.getElementById('audio-format').value;
+    form.appendChild(fInput);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+  }
+</script>

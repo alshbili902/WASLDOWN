@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+
+<div class="max-w-2xl mx-auto py-12 text-center">
+    <div class="mb-8 relative inline-block">
+        <div class="w-32 h-32 bg-purple-500/10 rounded-full flex items-center justify-center border-4 border-purple-500/20 mx-auto">
+            <i data-lucide="lock" class="w-12 h-12 text-purple-500 animate-bounce"></i>
+        </div>
+        <div class="absolute -bottom-2 -right-2 bg-slate-900 border-2 border-purple-500 p-2 rounded-full">
+            <i data-lucide="crown" class="w-6 h-6 text-yellow-400"></i>
+        </div>
+    </div>
+
+    <h1 class="text-4xl font-black text-white mb-4">هذه الأداة متاحة لمشتركي VIP فقط ⭐</h1>
+    <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+        تحتاج إلى ترقية حسابك إلى باقة VIP للوصول إلى أدوات الذكاء الاصطناعي والمميزات المتقدمة.
+        <br>
+        <span class="text-purple-400 font-bold">باقة VIP توفر لك تحميلات غير محدودة، سرعة أعلى، ودعم جميع الصيغ.</span>
+    </p>
+
+    <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+        <a href="/pricing" class="bg-purple-600 hover:bg-purple-500 text-white px-8 py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-purple-500/20 flex items-center gap-2">
+            اطلع على الخطط والأسعار
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </a>
+        <a href="/tools" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-8 py-4 rounded-2xl font-bold transition-all border border-slate-700">
+            العودة للأدوات المجانية
+        </a>
+    </div>
+
+    <div class="mt-12 p-6 bg-slate-800/30 rounded-2xl border border-slate-700/30 text-left">
+        <h4 class="text-white font-bold mb-4 text-center">مميزات باقة الـ VIP</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div class="flex items-center gap-2 text-slate-400">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                جميع أدوات الذكاء الاصطناعي (التلخيص والتحليل)
+            </div>
+            <div class="flex items-center gap-2 text-slate-400">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                تحسين جودة الصور وتحويل الفيديو لـ GIF
+            </div>
+            <div class="flex items-center gap-2 text-slate-400">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                أولوية في التحميل وسرعة سيرفرات فائقة
+            </div>
+            <div class="flex items-center gap-2 text-slate-400">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                دعم فني خاص ومميزات حصرية
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

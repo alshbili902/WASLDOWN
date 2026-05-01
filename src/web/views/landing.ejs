@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وصل داونلودر - أسهل بوت تحميل في تليجرام</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    }
+    .icon-hover { transition: all 0.3s ease; }
+    .card:hover .icon-hover { transform: scale(1.08) rotate(3deg); }
+    /* نظام البطاقات المضيئة المتقدم */
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    .section-download { --color1: #38bdf8; --color2: #6366f1; }
+    .section-features { --color1: #a855f7; --color2: #ec4899; }
+    .section-pricing { --color1: #22c55e; --color2: #4ade80; }
+    .section-vip { --color1: #facc15; --color2: #f59e0b; }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.85);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(14px);
+      /* Default colors if no section class provided */
+      --color1: #38bdf8;
+      --color2: #6366f1;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 24px;
+      background: conic-gradient(
+        from var(--angle),
+        transparent 20%,
+        var(--color1),
+        var(--color2),
+        var(--color1),
+        transparent 80%
+      );
+      animation: spin 4s linear infinite, pulse 2.5s ease-in-out infinite;
+      z-index: 0;
+      filter: blur(6px);
+      opacity: 0.7;
+      transition: all 0.4s ease;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 22px;
+      z-index: 1;
+    }
+
+    .card > * { position: relative; z-index: 2; }
+    
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .card:hover::before {
+      animation: spin 2s linear infinite, pulse 2.5s ease-in-out infinite;
+      opacity: 1;
+      filter: blur(10px);
+    }
+
+    @keyframes spin {
+      0% { --angle: 0deg; }
+      100% { --angle: 360deg; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; filter: blur(4px); }
+      50% { opacity: 1; filter: blur(8px); }
+    }
+
+    /* Mobile Menu Full Isolation & Premium Animations */
+    .mobile-menu-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100dvh !important;
+      background: rgba(7, 12, 28, 0.98) !important;
+      backdrop-filter: blur(18px);
+      z-index: 2147483647 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+
+    .mobile-menu-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-menu-overlay.closing {
+      opacity: 0;
+    }
+
+    .mobile-menu-card {
+      position: relative;
+      width: min(88vw, 420px);
+      padding: 40px 28px;
+      border-radius: 32px;
+      background: rgba(15, 23, 42, 0.94);
+      overflow: hidden;
+      transform: translateY(28px) scale(0.94);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(.2,.9,.2,1), opacity 0.45s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .mobile-menu-overlay.open .mobile-menu-card {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .mobile-menu-overlay.closing .mobile-menu-card {
+      transform: translateY(20px) scale(0.96);
+      opacity: 0;
+    }
+
+    .mobile-menu-card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(
+        from var(--angle, 0deg),
+        transparent,
+        #38bdf8,
+        #6366f1,
+        #a855f7,
+        #38bdf8,
+        transparent
+      );
+      animation: menuSpin 4s linear infinite, menuPulse 2.5s ease-in-out infinite;
+      z-index: 0;
+      filter: blur(8px);
+      opacity: 0.8;
+    }
+
+    .mobile-menu-card::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: 30px;
+      z-index: 1;
+    }
+
+    .mobile-menu-card > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes menuSpin {
+      to {
+        --angle: 360deg;
+      }
+    }
+
+    @keyframes menuPulse {
+      0%, 100% {
+        opacity: 0.55;
+        filter: blur(5px);
+      }
+      50% {
+        opacity: 1;
+        filter: blur(10px);
+      }
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 10;
+      color: #94a3b8;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .mobile-menu-close:hover {
+      color: #fff;
+      transform: rotate(90deg);
+    }
+
+    .mobile-menu-logo {
+      font-size: 24px;
+      font-weight: 900;
+      color: #3b82f6;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .mobile-menu-links {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .mobile-menu-links a {
+      color: #cbd5e1;
+      font-size: 20px;
+      font-weight: 700;
+      text-decoration: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease, color 0.25s ease;
+    }
+
+    .mobile-menu-overlay.open .mobile-menu-links a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu-overlay.open .mobile-menu-links a:nth-child(1) { transition-delay: 0.08s; }
+    .mobile-menu-overlay.open .mobile-menu-links a:nth-child(2) { transition-delay: 0.14s; }
+    .mobile-menu-overlay.open .mobile-menu-links a:nth-child(3) { transition-delay: 0.20s; }
+    .mobile-menu-overlay.open .mobile-menu-links a:nth-child(4) { transition-delay: 0.26s; }
+    .mobile-menu-overlay.open .mobile-menu-links a:nth-child(5) { transition-delay: 0.32s; }
+    .mobile-menu-overlay.open .mobile-menu-links a:nth-child(6) { transition-delay: 0.38s; }
+    .mobile-menu-overlay.open .mobile-menu-links a:nth-child(7) { transition-delay: 0.44s; }
+
+    .mobile-menu-links a:hover {
+      color: #60a5fa;
+      transform: translateY(-2px);
+    }
+
+    body.menu-open {
+      overflow: hidden !important;
+      height: 100dvh !important;
+    }
+
+    body.menu-open main,
+    body.menu-open footer {
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+
+    /* Page Transitions */
+    .page-transition {
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+      filter: blur(4px);
+      transition:
+        opacity 0.55s ease,
+        transform 0.55s cubic-bezier(.2,.9,.2,1),
+        filter 0.55s ease;
+    }
+
+    .page-transition.page-loaded {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .page-transition.page-leaving {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+      filter: blur(5px);
+    }
+
+    /* Transition Glow Bar */
+    .transition-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, #3b82f6, transparent);
+      z-index: 10000;
+      transform: translateX(-100%);
+      transition: transform 0.4s ease;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    }
+
+    .page-transition.page-leaving ~ .transition-glow,
+    body:not(.dom-ready) .transition-glow {
+      transform: translateX(100%);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+  <% const currentPage = locals.page || 'home'; %>
+
+  <div class="transition-glow" id="glow-bar"></div>
+
+  <!-- Header / Navbar -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 text-2xl font-black text-blue-500 tracking-wider">
+        <i data-lucide="cloud-download" class="w-8 h-8"></i>
+        <span>وصل داونلودر</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex gap-8 font-bold text-slate-300">
+        <a href="/" class="hover:text-blue-400 transition-colors <%= currentPage === 'home' ? 'text-blue-400 border-b-2 border-blue-400' : '' %>">الرئيسية</a>
+        <a href="/features" class="hover:text-blue-400 transition-colors <%= currentPage === 'features' ? 'text-blue-400 border-b-2 border-blue-400' : '' %>">المميزات</a>
+        <a href="/pricing" class="hover:text-blue-400 transition-colors <%= currentPage === 'pricing' ? 'text-blue-400 border-b-2 border-blue-400' : '' %>">الأسعار</a>
+        <a href="/contact" class="hover:text-blue-400 transition-colors <%= currentPage === 'contact' ? 'text-blue-400 border-b-2 border-blue-400' : '' %>">اتصل بنا</a>
+        <a href="/developer" class="hover:text-blue-400 transition-colors <%= currentPage === 'developer' ? 'text-blue-400 border-b-2 border-blue-400' : '' %>">عن المطور</a>
+      </nav>
+
+      <!-- Desktop Buttons -->
+      <div class="hidden lg:flex items-center gap-4">
+        <% if (userId) { %>
+          <a href="/account" class="text-white hover:text-blue-400 font-bold transition-colors">حسابي</a>
+          <a href="/logout" class="bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white px-4 py-2 rounded-full font-bold transition-all text-sm">خروج</a>
+        <% } else { %>
+          <a href="/login" class="text-white hover:text-blue-400 font-bold transition-colors">دخول</a>
+          <a href="/register" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105">إنشاء حساب</a>
+        <% } %>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button id="menu-toggle" class="lg:hidden text-slate-300 hover:text-white transition-colors">
+        <i data-lucide="menu" class="w-8 h-8"></i>
+      </button>
+    </div>
+
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="flex-grow page-transition" id="page-transition">
+    
+    <% if (currentPage === 'home') { %>
+      <!-- Home Page -->
+      <section class="hero-gradient py-20 lg:py-32 border-b border-slate-800">
+        <div class="container mx-auto px-4 text-center">
+          <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">حمّل أي مقطع بسهولة <br> <span class="text-blue-400">مع وصل داونلودر</span></h1>
+          <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">منصة متكاملة لتحميل الميديا، معالجة الصور، وتلخيص الفيديوهات بالذكاء الاصطناعي - متوفرة عبر الويب وبوت التليجرام باشتراك واحد.</p>
+          <div class="flex justify-center gap-4">
+            <a href="/tools" class="bg-blue-600 hover:bg-blue-500 text-white text-lg font-black px-10 py-5 rounded-2xl shadow-xl shadow-blue-500/30 transition-all transform hover:-translate-y-1 flex items-center gap-3">
+              <i data-lucide="zap" class="w-6 h-6"></i> ابدأ الآن
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Premium Overview Cards -->
+      <section class="py-20 bg-slate-900">
+        <div class="container mx-auto px-4">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            
+            <!-- Vision Card -->
+            <div class="card section-download p-10 text-center md:text-right">
+              <div class="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-8 border border-blue-500/30 mx-auto md:mr-0">
+                <i data-lucide="sparkles" class="w-8 h-8 text-blue-400"></i>
+              </div>
+              <h2 class="text-3xl font-black text-white mb-6">أكثر من مجرد أداة تحميل</h2>
+              <p class="text-xl text-slate-400 leading-relaxed">
+                لقد صممنا "وصل داونلودر" ليكون رفيقك الرقمي المتكامل؛ حيث تجد كل ما تحتاجه لمعالجة الميديا وتحميلها في منصة واحدة ذكية تعمل بسلاسة أينما كنت.
+              </p>
+            </div>
+
+            <!-- Experience Card -->
+            <div class="card section-features p-10 text-center md:text-right">
+              <div class="w-16 h-16 bg-purple-600/20 rounded-2xl flex items-center justify-center mb-8 border border-purple-500/30 mx-auto md:mr-0">
+                <i data-lucide="rocket" class="w-8 h-8 text-purple-400"></i>
+              </div>
+              <h2 class="text-3xl font-black text-white mb-6">اختر واجهتك المفضلة 🚀</h2>
+              <p class="text-xl text-slate-400 leading-relaxed">
+                تجربة موحدة، اشتراك واحد، وإمكانيات لا محدودة تنتظرك في كل مكان. سواء عبر الويب أو التليجرام، نحن معك في كل خطوة.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Detailed Usage Options Section (The existing Web/Bot cards) -->
+      <section class="py-20 bg-slate-800/50">
+        <div class="container mx-auto px-4 max-w-5xl">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Web Card -->
+            <div class="card p-10 bg-slate-800 rounded-3xl border border-blue-500/30 shadow-2xl hover:border-blue-400 transition-all text-center relative overflow-hidden group">
+              <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent"></div>
+              <div class="relative z-10">
+                <i data-lucide="globe" class="w-16 h-16 mx-auto text-blue-400 mb-6 group-hover:scale-110 transition-transform"></i>
+                <h3 class="text-2xl font-bold text-white mb-4">استخدام الموقع</h3>
+                <p class="text-slate-400 mb-8 leading-relaxed">
+                  تحكم كامل بالأدوات من خلال واجهة ويب سهلة ومنظمة مباشرة من المتصفح بعد تسجيل الدخول.
+                </p>
+                <a href="/tools" class="inline-flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-blue-500/30">
+                  <i data-lucide="layout-dashboard" class="w-5 h-5"></i> فتح الأدوات
+                </a>
+              </div>
+            </div>
+
+            <!-- Bot Card -->
+            <div class="card p-10 bg-slate-800 rounded-3xl border border-indigo-500/30 shadow-2xl hover:border-indigo-400 transition-all text-center relative overflow-hidden group">
+              <div class="absolute inset-0 bg-gradient-to-bl from-indigo-600/10 to-transparent"></div>
+              <div class="relative z-10">
+                <i data-lucide="send" class="w-16 h-16 mx-auto text-indigo-400 mb-6 group-hover:scale-110 transition-transform"></i>
+                <h3 class="text-2xl font-bold text-white mb-4">استخدام بوت التليجرام</h3>
+                <p class="text-slate-400 mb-8 leading-relaxed">
+                  استخدم الخدمات بسرعة من داخل تليجرام بعد ربط حسابك بالبريد الإلكتروني المسجل في الموقع.
+                </p>
+                <a href="https://t.me/wasldownbot" target="_blank" class="inline-flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-indigo-500/30">
+                  <i data-lucide="bot" class="w-5 h-5"></i> فتح البوت
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-20 bg-slate-800">
+        <div class="container mx-auto px-4">
+          <h2 class="text-3xl font-black text-center mb-12 flex justify-center items-center gap-3">
+            لماذا تختار وصل داونلودر <i data-lucide="sparkles" class="w-8 h-8 text-amber-400"></i>
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="card section-download p-8 text-center">
+              <i data-lucide="zap" class="w-12 h-12 mb-5 mx-auto text-yellow-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-3">سرعة عالية</h3>
+              <p class="text-slate-400 text-sm">أداء استثنائي في جلب ومعالجة المقاطع في ثوانٍ.</p>
+            </div>
+            <div class="card section-download p-8 text-center">
+              <i data-lucide="globe" class="w-12 h-12 mb-5 mx-auto text-blue-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-3">منصات متعددة</h3>
+              <p class="text-slate-400 text-sm">يدعم كافة منصات التواصل الاجتماعي الرائدة.</p>
+            </div>
+            <div class="card section-download p-8 text-center">
+              <i data-lucide="file-text" class="w-12 h-12 mb-5 mx-auto text-emerald-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-3">تحويل ملفات</h3>
+              <p class="text-slate-400 text-sm">خيارات متعددة لتحويل الصيغ بكل مرونة.</p>
+            </div>
+            <div class="card section-download p-8 text-center">
+              <i data-lucide="thumbs-up" class="w-12 h-12 mb-5 mx-auto text-purple-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-3">تجربة سهلة</h3>
+              <p class="text-slate-400 text-sm">واجهة مستخدم بسيطة ولا تتطلب أي خبرة تقنية.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <% } else if (currentPage === 'features') { %>
+      <!-- Features Page -->
+      <section class="py-20 bg-slate-900 min-h-[70vh]">
+        <div class="container mx-auto px-4">
+          <h1 class="text-4xl font-black text-center mb-16 flex justify-center items-center gap-3">
+            مميزات وصل داونلودر <i data-lucide="layers" class="w-10 h-10 text-blue-400"></i>
+          </h1>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="card section-features p-8">
+              <i data-lucide="video" class="w-10 h-10 mb-4 text-blue-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2">تحميل فيديو بأعلى جودة</h3>
+              <p class="text-slate-400">احصل على فيديوهاتك المفضلة بدون علامات مائية.</p>
+            </div>
+            <div class="card section-features p-8">
+              <i data-lucide="music" class="w-10 h-10 mb-4 text-indigo-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2">تحميل صوت متعدد الصيغ</h3>
+              <p class="text-slate-400">ادعم استخراج الصوت بصيغ MP3, M4A, و WAV.</p>
+            </div>
+            <div class="card section-features p-8">
+              <i data-lucide="file-image" class="w-10 h-10 mb-4 text-rose-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2 flex items-center gap-2">تحويل الصور بسهولة <span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded text-xs">جديد</span></h3>
+              <p class="text-slate-400">حوّل صورك إلى عدة صيغ مثل JPG و PNG و WEBP و PDF بضغطة زر.</p>
+            </div>
+            <div class="card section-features p-8">
+              <i data-lucide="layers" class="w-10 h-10 mb-4 text-orange-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2 flex items-center gap-2">دمج عدة صور في PDF <span class="bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded text-xs">حصري</span></h3>
+              <p class="text-slate-400">ارسل مجموعة صور وسيتم تحويلها إلى ملف PDF مرتب بضغطة واحدة.</p>
+            </div>
+            <div class="card section-features p-8">
+              <i data-lucide="file-text" class="w-10 h-10 mb-4 text-emerald-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2">تحويل ملفات الصوت</h3>
+              <p class="text-slate-400">تحويل سريع بين الصيغ لضمان التوافق التام.</p>
+            </div>
+            <div class="card section-features p-8">
+              <i data-lucide="shield-check" class="w-10 h-10 mb-4 text-amber-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2">بدون إعلانات</h3>
+              <p class="text-slate-400">استمتع بتجربة نظيفة وخالية من أي إعلانات مزعجة.</p>
+            </div>
+            <div class="card section-features p-8">
+              <i data-lucide="zap" class="w-10 h-10 mb-4 text-yellow-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2">سرعة فائقة</h3>
+              <p class="text-slate-400">خوادم قوية مخصصة لضمان سرعة معالجة وتحميل عالية.</p>
+            </div>
+            <div class="card section-features p-8">
+              <i data-lucide="settings" class="w-10 h-10 mb-4 text-slate-400 icon-hover"></i>
+              <h3 class="text-xl font-bold mb-2">نظام اشتراك مرن</h3>
+              <p class="text-slate-400">باقات متعددة تتناسب مع جميع احتياجاتك.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <% } else if (currentPage === 'pricing') { %>
+      <!-- Pricing Page -->
+      <section class="py-20 bg-slate-800 min-h-[70vh]">
+        <div class="container mx-auto px-4 max-w-6xl">
+          <h1 class="text-4xl font-black text-center mb-16 flex justify-center items-center gap-3">
+            باقات الأسعار <i data-lucide="credit-card" class="w-10 h-10 text-emerald-400"></i>
+          </h1>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            
+            <!-- Free Plan -->
+            <div class="card section-pricing p-8 border border-slate-700">
+              <h3 class="text-2xl font-bold mb-2 text-slate-300">الباقة المجانية</h3>
+              <div class="text-4xl font-black mb-6 text-white">0 <span class="text-lg text-slate-500 font-medium">ريال</span></div>
+              <ul class="space-y-4 text-slate-400 mb-8">
+                <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-emerald-500"></i> 5 تحميلات فقط</li>
+                <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-emerald-500"></i> ميزات محدودة</li>
+                <li class="flex items-center gap-3"><i data-lucide="x" class="w-5 h-5 text-slate-600"></i> لا تدعم تحميل الصوت</li>
+                <li class="flex items-center gap-3"><i data-lucide="x" class="w-5 h-5 text-slate-600"></i> سرعة قياسية</li>
+              </ul>
+              <a href="https://t.me/@wasldownbot" class="flex justify-center items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-colors">
+                <i data-lucide="play" class="w-5 h-5"></i> جرب الآن
+              </a>
+            </div>
+
+            <!-- Monthly Plan -->
+            <div class="card section-download p-8 relative border border-blue-500 shadow-2xl shadow-blue-500/20 transform lg:scale-105 z-10">
+              <div class="absolute top-0 right-8 bg-blue-500 text-white text-xs font-bold px-4 py-1.5 rounded-b-lg">الأكثر طلباً</div>
+              <h3 class="text-2xl font-bold mb-2 text-blue-100 flex items-center gap-2"><i data-lucide="crown" class="w-6 h-6 text-yellow-400"></i> الباقة الشهرية</h3>
+              <div class="text-4xl font-black mb-6 text-blue-400">15 <span class="text-lg text-blue-200 font-medium">ريال / شهر</span></div>
+              <ul class="space-y-4 text-blue-100 mb-8">
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400"></i> تحميل غير محدود</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400"></i> جميع المميزات متاحة</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400"></i> دعم فني مخصص</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400"></i> جودة تحميل عالية</li>
+              </ul>
+              <% const monthlyMsg = userId ? `أهلاً، أريد الاشتراك في بوت وصل داونلودر (الباقة الشهرية)%0A%0Aمعلومات العميل:%0Aمعرف الحساب: ${userId}` : `أهلاً، أريد الاشتراك في بوت وصل داونلودر (الباقة الشهرية)` %>
+              <a href="https://wa.me/966556805220?text=<%= monthlyMsg %>" target="_blank" class="flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 rounded-xl transition-colors">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i> اشترك الآن
+              </a>
+            </div>
+
+            <!-- VIP Plan -->
+            <div class="card section-vip p-8 border border-purple-500 shadow-lg shadow-purple-500/10">
+              <h3 class="text-2xl font-bold mb-2 text-purple-200 flex items-center gap-2"><i data-lucide="gem" class="w-6 h-6 text-purple-400"></i> باقة VIP</h3>
+              <div class="text-4xl font-black mb-6 text-purple-400">25 <span class="text-lg text-purple-200 font-medium">ريال / شهر</span></div>
+              <ul class="space-y-4 text-purple-100 mb-8">
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400"></i> سرعة أعلى بكثير</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400"></i> بدون أي انتظار (Queue)</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400"></i> كل ميزات الباقة الشهرية</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400"></i> ميزات حصرية قادمة</li>
+              </ul>
+              <% const vipMsg = userId ? `أهلاً، أريد الاشتراك في بوت وصل داونلودر (باقة VIP)%0A%0Aمعلومات العميل:%0Aمعرف الحساب: ${userId}` : `أهلاً، أريد الاشتراك في بوت وصل داونلودر (باقة VIP)` %>
+              <a href="https://wa.me/966556805220?text=<%= vipMsg %>" target="_blank" class="flex justify-center items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl transition-colors">
+                <i data-lucide="zap" class="w-5 h-5"></i> اشترك كـ VIP
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    <% } else if (currentPage === 'contact') { %>
+      <!-- Contact Page -->
+      <section class="py-20 bg-slate-900 min-h-[70vh] flex items-center">
+        <div class="container mx-auto px-4 max-w-2xl text-center">
+          <h1 class="text-4xl font-black mb-6 flex justify-center items-center gap-3">
+            تواصل معنا <i data-lucide="phone-call" class="w-10 h-10 text-emerald-400"></i>
+          </h1>
+          <p class="text-xl text-slate-400 mb-12">نحن هنا لمساعدتك! يمكنك التواصل معنا عبر الوسائل التالية للحصول على الدعم أو الاستفسار عن الاشتراكات.</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="https://wa.me/966556805220" target="_blank" class="card section-download p-8 flex flex-col items-center justify-center hover:border-emerald-500 border border-transparent transition-colors">
+              <i data-lucide="message-square" class="w-12 h-12 mb-4 text-emerald-400 icon-hover"></i>
+              <h3 class="text-xl font-bold text-white">واتساب</h3>
+              <p class="text-slate-400 text-sm mt-2">تواصل مباشر وسريع</p>
+            </a>
+            <a href="https://t.me/YOUR_TELEGRAM_SUPPORT" target="_blank" class="card section-download p-8 flex flex-col items-center justify-center hover:border-blue-500 border border-transparent transition-colors">
+              <i data-lucide="send" class="w-12 h-12 mb-4 text-blue-400 icon-hover"></i>
+              <h3 class="text-xl font-bold text-white">تليجرام</h3>
+              <p class="text-slate-400 text-sm mt-2">دعم فني عبر البوت</p>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    <% } else if (currentPage === 'developer') { %>
+      <!-- Developer Page -->
+      <section class="py-20 bg-slate-900 min-h-[70vh] flex items-center">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+          
+          <div class="card section-features p-10 md:p-16 border border-slate-700 mx-auto">
+            <div class="relative w-32 h-32 mx-auto mb-6">
+              <div class="absolute inset-0 bg-blue-500 rounded-full blur-md opacity-50 animate-pulse"></div>
+              <div class="relative bg-slate-800 rounded-full w-full h-full border-4 border-slate-700 flex items-center justify-center overflow-hidden">
+                <i data-lucide="code-2" class="w-16 h-16 text-blue-400"></i>
+              </div>
+            </div>
+            
+            <h1 class="text-4xl font-black mb-2 text-white">عبدالرحمن الشبيلي</h1>
+            <p class="text-blue-400 text-lg font-medium mb-8">مطور برمجيات ومهندس حلول تقنية</p>
+            
+            <div class="text-slate-300 leading-relaxed text-lg text-right max-w-2xl mx-auto space-y-4">
+              <p>مرحباً! أنا عبدالرحمن الشبيلي، مطور هذا النظام المتكامل ("وصل داونلودر").</p>
+              <p>شغفي هو بناء تطبيقات وحلول برمجية ذكية تسهل حياة المستخدمين وتوفر لهم تجربة سلسة واحترافية. أهتم جداً بالتفاصيل، من تصميم الواجهات الجذابة وحتى بناء البنية التحتية القوية والخوادم التي تعمل بكفاءة عالية تحت الضغط.</p>
+              <p>تم بناء هذا المشروع ليكون مثالاً للمنصات السريعة والموثوقة التي تخدم آلاف المستخدمين يومياً باستخدام أحدث تقنيات الويب والذكاء الاصطناعي.</p>
+            </div>
+            
+            <div class="mt-10 flex justify-center gap-6">
+              <a href="#" class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all text-slate-400 border border-slate-700">
+                <i data-lucide="twitter" class="w-6 h-6"></i>
+              </a>
+              <a href="#" class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center hover:bg-slate-700 hover:text-white transition-all text-slate-400 border border-slate-700">
+                <i data-lucide="github" class="w-6 h-6"></i>
+              </a>
+              <a href="#" class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition-all text-slate-400 border border-slate-700">
+                <i data-lucide="linkedin" class="w-6 h-6"></i>
+              </a>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+
+    <% } else if (currentPage === 'terms') { %>
+      <!-- Terms of Use -->
+      <section class="py-20 bg-slate-900">
+        <div class="container mx-auto px-4 max-w-4xl">
+          <div class="card p-10 md:p-16 border border-slate-800">
+            <h1 class="text-4xl font-black mb-10 text-white text-center">شروط الاستخدام</h1>
+            
+            <div class="space-y-8 text-slate-300 leading-relaxed text-lg text-right">
+              <div>
+                <h3 class="text-xl font-bold text-blue-400 mb-3">نطاق الخدمة</h3>
+                <p>يقدم موقع وصل داونلودر أدوات تقنية متقدمة لتحميل وتحويل المحتوى من الروابط العامة المتاحة على شبكة الإنترنت فقط. نحن لا نوفر محتوى بأنفسنا، بل نقدم وسيلة تقنية للتعامل مع الروابط التي يضعها المستخدم.</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-blue-400 mb-3">الاستخدام المقبول</h3>
+                <p>يمنع منعاً باتاً استخدام الخدمة لتحميل أي محتوى مخالف للقوانين، أو محتوى خاص غير مصرح بالوصول إليه. الخدمة مخصصة للاستخدام الشخصي والقانوني فقط.</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-blue-400 mb-3">إخلاء المسؤولية</h3>
+                <p>المستخدم هو المسؤول الوحيد عن نوعية وطبيعة المحتوى الذي يقوم بمعالجته عبر الموقع. لا يتحمل الموقع أو المطور أي مسؤولية قانونية أو أدبية ناتجة عن إساءة استخدام الخدمة أو انتهاك حقوق الملكية الفكرية للآخرين.</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-blue-400 mb-3">الاشتراكات والمدفوعات</h3>
+                <p>الاشتراكات في الباقات المميزة (VIP) تهدف لدعم استمرارية المشروع وتوفير ميزات إضافية. جميع المدفوعات نهائية وغير قابلة للاسترجاع بمجرد تفعيل الخدمة، نظراً لطبيعة المنتجات الرقمية.</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-blue-400 mb-3">تعديل الشروط</h3>
+                <p>يحتفظ الموقع بالحق في تحديث أو تغيير شروط الاستخدام هذه في أي وقت لضمان جودة وقانونية الخدمة. يعتبر استمرارك في استخدام الموقع بعد التحديث موافقة ضمنية على الشروط الجديدة.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <% } else if (currentPage === 'privacy') { %>
+      <!-- Privacy Policy -->
+      <section class="py-20 bg-slate-900">
+        <div class="container mx-auto px-4 max-w-4xl">
+          <div class="card p-10 md:p-16 border border-slate-800">
+            <h1 class="text-4xl font-black mb-10 text-white text-center">سياسة الخصوصية</h1>
+            
+            <div class="space-y-8 text-slate-300 leading-relaxed text-lg text-right">
+              <div>
+                <h3 class="text-xl font-bold text-emerald-400 mb-3">البيانات التي نجمعها</h3>
+                <p>نحن نجمع الحد الأدنى من البيانات الضرورية لتشغيل الخدمة، وهي: البريد الإلكتروني (للتسجيل والدخول)، وبيانات الاستخدام الأساسية (مثل عدد العمليات لتنفيذ حدود الباقات).</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-emerald-400 mb-3">كيفية استخدام البيانات</h3>
+                <p>تُستخدم بياناتك حصرياً لإدارة حسابك، التحقق من حالة اشتراكك، تحسين أداء الخدمة، وتقديم الدعم الفني اللازم لك عند الطلب.</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-emerald-400 mb-3">حماية ومشاركة البيانات</h3>
+                <p>نحن نلتزم بحماية بياناتك باستخدام تقنيات تشفير آمنة. كما نؤكد بشكل قاطع أننا لا نقوم ببيع، تأجير، أو مشاركة بيانات المستخدمين مع أي أطراف ثالثة لأغراض تسويقية أو غيرها.</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-emerald-400 mb-3">حقوق المستخدم</h3>
+                <p>لك الحق الكامل في طلب حذف حسابك وكافة البيانات المرتبطة به من سجلاتنا في أي وقت عبر التواصل مع الدعم الفني.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <% } %>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 py-16 text-center border-t border-slate-800 mt-auto">
+    <div class="container mx-auto px-4">
+      <h2 class="text-xl font-bold text-white mb-6 flex justify-center items-center gap-2">
+        <i data-lucide="help-circle" class="w-6 h-6 text-blue-400"></i> هل لديك استفسار أو تريد الاشتراك؟
+      </h2>
+      <a href="https://wa.me/966556805220" target="_blank"
+        class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-3 rounded-full font-bold transition-all transform hover:scale-105 mb-10 shadow-lg shadow-emerald-500/20">
+        <i data-lucide="phone" class="w-5 h-5"></i>
+        <span>تواصل عبر واتساب</span>
+      </a>
+      
+      <div class="flex justify-center gap-6 mb-8 text-sm font-medium text-slate-500">
+        <a href="/terms" class="hover:text-slate-300 transition-colors">شروط الاستخدام</a>
+        <span class="text-slate-800">|</span>
+        <a href="/privacy" class="hover:text-slate-300 transition-colors">سياسة الخصوصية</a>
+      </div>
+
+      <p class="text-slate-600 text-sm flex justify-center items-center gap-2">
+        &copy; <%= new Date().getFullYear() %> وصل داونلودر. جميع الحقوق محفوظة.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Mobile Menu Overlay (Outside Main Content) -->
+  <div class="mobile-menu-overlay" id="mobileMenu">
+    <div class="mobile-menu-card">
+      <button class="mobile-menu-close" id="menu-close">
+        <i data-lucide="x" class="w-8 h-8"></i>
+      </button>
+      
+      <div class="mobile-menu-logo">وصل داونلودر</div>
+      
+      <nav class="mobile-menu-links">
+        <a href="/">الرئيسية</a>
+        <a href="/features">المميزات</a>
+        <a href="/pricing">الأسعار</a>
+        <a href="/contact">اتصل بنا</a>
+        <a href="/developer">عن المطور</a>
+        <a href="/terms">شروط الاستخدام</a>
+        <a href="/privacy">سياسة الخصوصية</a>
+        
+        <div class="flex flex-col items-center gap-4 mt-6 w-full">
+          <% if (userId) { %>
+            <a href="/account" class="text-blue-400">حسابي</a>
+            <a href="/logout" class="text-red-400 text-xl">خروج</a>
+          <% } else { %>
+            <a href="/login">دخول</a>
+            <a href="/register" class="bg-blue-600 text-white px-10 py-3 rounded-full text-xl shadow-xl shadow-blue-600/20">إنشاء حساب</a>
+          <% } %>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    lucide.createIcons();
+
+    // Page Transition Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('dom-ready');
+      const page = document.getElementById('page-transition');
+      const glowBar = document.getElementById('glow-bar');
+
+      if (page) {
+        requestAnimationFrame(() => {
+          page.classList.add('page-loaded');
+        });
+      }
+
+      // Handle Internal Links
+      document.querySelectorAll('a[href]').forEach((link) => {
+        const href = link.getAttribute('href');
+
+        // Check if internal
+        const isInternal =
+          href &&
+          !href.startsWith('#') &&
+          !href.startsWith('http') &&
+          !href.startsWith('mailto:') &&
+          !href.startsWith('tel:') &&
+          !link.hasAttribute('target');
+
+        if (!isInternal) return;
+
+        link.addEventListener('click', (e) => {
+          // If it's a middle click or Ctrl+Click, let the browser handle it
+          if (e.button !== 0 || e.ctrlKey || e.shiftKey || e.metaKey) return;
+
+          e.preventDefault();
+
+          if (!page) {
+            window.location.href = href;
+            return;
+          }
+
+          // Start transition
+          page.classList.remove('page-loaded');
+          page.classList.add('page-leaving');
+          
+          if (glowBar) {
+            glowBar.style.transform = 'translateX(0)';
+          }
+
+          setTimeout(() => {
+            window.location.href = href;
+          }, 450);
+        });
+      });
+    });
+
+    // Mobile Menu Logic - Fixed, Isolated & Animated
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuLinks = mobileMenu.querySelectorAll('a');
+
+    const openMenu = () => {
+      mobileMenu.classList.remove('closing');
+      mobileMenu.classList.add('open');
+      document.body.classList.add('menu-open');
+    };
+
+    const closeMenu = () => {
+      mobileMenu.classList.add('closing');
+      
+      // انتظار انتهاء الأنيميشن قبل الإخفاء التام
+      setTimeout(() => {
+        mobileMenu.classList.remove('open');
+        mobileMenu.classList.remove('closing');
+        document.body.classList.remove('menu-open');
+      }, 450);
+    };
+
+    menuToggle.addEventListener('click', openMenu);
+    menuClose.addEventListener('click', closeMenu);
+    
+    // إغلاق القائمة عند الضغط على أي رابط
+    menuLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+  </script>
+</body>
+</html>
