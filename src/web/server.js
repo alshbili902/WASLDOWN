@@ -1,9 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
-const dotenv = require('dotenv');
-
-dotenv.config();
+const env = require('../config/env');
 
 const app = express();
 
@@ -75,7 +73,8 @@ app.use((req, res) => {
   res.status(404).render('404', { pageTitle: 'الصفحة غير موجودة' });
 });
 
-const PORT = process.env.DASHBOARD_PORT || 3000;
+const PORT = env.dashboardPort;
 app.listen(PORT, () => {
+  env.logStartupInfo();
   console.log(`🌐 Dashboard is running on http://localhost:${PORT}`);
 });

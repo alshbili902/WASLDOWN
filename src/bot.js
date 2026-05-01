@@ -17,6 +17,9 @@ bot.catch(async (error, ctx) => {
 });
 
 async function main() {
+  // طباعة معلومات التشغيل المطلوبة
+  env.logStartupInfo();
+
   await registerUserCommands(bot);
 
   bot.on('text', handleVideoLink);

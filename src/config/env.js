@@ -37,12 +37,31 @@ const env = {
   adminIds: parseAdminIds(process.env.ADMIN_IDS),
   supabaseUrl: parseRequiredString('SUPABASE_URL'),
   supabaseAnonKey: parseRequiredString('SUPABASE_ANON_KEY'),
+  databaseUrl: process.env.DATABASE_URL || null,
+  port: parseNumber('PORT', 3000),
+  dashboardPort: parseNumber('DASHBOARD_PORT', 3005),
   trialLimit: parseNumber('TRIAL_LIMIT', 5),
   subscriptionPrice: parseNumber('SUBSCRIPTION_PRICE', 10),
-  ytdlpPath: process.env.YTDLP_PATH || 'yt-dlp',
+  ytdlpPath: process.env.YTDLP_PATH || '/var/www/wasl/bin/yt-dlp',
   ffmpegPath: process.env.FFMPEG_PATH || 'ffmpeg',
   maxFileSizeMb: parseNumber('MAX_FILE_SIZE_MB', 50),
   downloadCooldownSeconds: parseNumber('DOWNLOAD_COOLDOWN_SECONDS', 20)
 };
 
-module.exports = env;
+/**
+ * طباعة لوق التشغيل المطلوب للسيرفر
+ */
+function logStartupInfo() {
+  console.log('-------------------------------------------');
+  console.log(`🚀 Using yt-dlp at: ${env.ytdlpPath}`);
+  console.log(`📡 Database URL loaded: ${env.databaseUrl ? 'YES' : 'NO'}`);
+  if (!env.databaseUrl) {
+    console.warn('⚠️ Warning: DATABASE_URL is not set. If the app requires direct DB connection, it might fail.');
+  }
+  console.log(`☁️ Supabase URL loaded: ${env.supabaseUrl ? 'YES' : 'NO'}`);
+  console.log(`🌐 Dashboard Port: ${env.dashboardPort}`);
+  console.log(`🤖 Bot starting...`);
+  console.log('-------------------------------------------');
+}
+
+module.exports = { ...env, logStartupInfo };

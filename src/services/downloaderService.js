@@ -121,7 +121,7 @@ async function downloadMedia(url, formatType = 'video') {
       ];
 
       try {
-        await runProcess('ffmpeg', ffmpegArgs);
+        await runProcess(env.ffmpegPath, ffmpegArgs);
         // Verify output exists and is not empty
         const stats = await fs.stat(iosPath);
         if (stats.size > 0) {
